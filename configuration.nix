@@ -90,48 +90,112 @@
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
+# 1. Enable nix-ld and specify the libraries it should use to fix Mason/LSPs
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    fuse3
+    icu
+    nss
+    openssl
+    curl
+    expat
+    libxml2
+  ];
+environment.sessionVariables = {
+  EDITOR = "nvim";
+};
+
+programs.zsh = {
+  enable = true;
+  autosuggestions.enable = true;
+  syntaxHighlighting.enable = true;
+  
+  # This is the "Omarchy" secret sauce
+  ohMyZsh = {
+    enable = true;
+    plugins = [ "git" "sudo" "history-substring-search" ];
+  };
+};
+
+# Set Zsh as your default shell for your user
+users.users.jaidev.shell = pkgs.zsh;
+
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    # Terminal & Browser
     kitty
-  neovim
-  chromium
-  git
-  gh
-  
-  neovim
-  # LazyVim Core Dependencies
-  ripgrep
-  fd
-  fzf
-  gcc
-  unzip
-  
-  # LSPs & Formatters (Mason replacement)
-  lua-language-server
-  stylua
-  nixd           # Nix LSP
-  alejandra      # Nix Formatter
+    chromium
+    
+    # Core Dev Tools
+    neovim
+    git
+    gh
+    lazygit
+    tree-sitter
+    ripgrep
+    fd
+    fzf
+    gcc
+    unzip
+    gnumake # Added: Essential for compiling some Neovim plugins
 
-  # Add more for your Full Stack work:
-  nodePackages.typescript-language-server
-  nodePackages.vscode-langservers-extracted # HTML/CSS/JSON
+    # File Management
+    yazi
+    glib # Provides 'gio' for trash support
+    
+    # LSPs & Formatters
+    lua-language-server
+    stylua
+    nixd
+    alejandra
+    nodePackages.typescript-language-server
+    nodePackages.vscode-langservers-extracted
 
-  waybar
-  rofi
-  hyprpaper
-  hyprlock
-  wl-clipboard
-  grim
-  slurp
-  playerctl
-  brightnessctl
-  networkmanagerapplet
-  matugen
-  yazi
-  ]
-  ;
+    # Document & Diagram Support (Fixes your Neovim errors)
+    ghostscript
+    tectonic
+    mermaid-cli
+    imagemagick
 
+    # Hyprland Ecosystem
+    waybar
+    rofi # Fixed: Better for Wayland/Nvidia
+    hyprpaper
+    hyprlock
+    wl-clipboard
+    grim
+    slurp
+    playerctl
+    brightnessctl
+    networkmanagerapplet
+    matugen
+
+# --- Wallpaper & Graphics ---
+    swww              # The missing piece for your wallpapers
+    swaynotificationcenter # For swaync
+    libnotify         # Needed for notifications to actually pop up
+    
+    # --- System Tray & Applets ---
+    networkmanagerapplet # For nm-applet
+    blueman              # For blueman-applet
+    
+    # --- Theme & Tools ---
+    hyprpicker        # For the color picker bind ($mainMod, C)
+    swappy            # For editing screenshots
+    
+    # --- Dependencies for your scripts ---
+    bash
+    coreutils
+    findutils
+    jq                # Many wallpaper scripts use jq to parse JSON
+  ];
+
+  # 2. Don't forget the Fonts! (Essential for Icons in LazyVim/Waybar)
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+    font-awesome
+  ];
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
