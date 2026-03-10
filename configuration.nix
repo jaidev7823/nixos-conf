@@ -66,28 +66,71 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+
+# --- Graphics / Nvidia Configuration ---
+  
+  # Enable OpenGL
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
+  # Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = ["nvidia"];
+
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = true; # RTX 3060 supports the open kernel module
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
+
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-chromium
-kitty
-neovim
-alacritty
-git
-waybar
-rofi
-wl-clipboard
-ripgrep
-fd  
-  hyprlock
+    kitty
+  neovim
+  chromium
+  git
+  gh
+  
+  neovim
+  # LazyVim Core Dependencies
+  ripgrep
+  fd
+  fzf
+  gcc
+  unzip
+  
+  # LSPs & Formatters (Mason replacement)
+  lua-language-server
+  stylua
+  nixd           # Nix LSP
+  alejandra      # Nix Formatter
+
+  # Add more for your Full Stack work:
+  nodePackages.typescript-language-server
+  nodePackages.vscode-langservers-extracted # HTML/CSS/JSON
+
+  waybar
+  rofi
   hyprpaper
+  hyprlock
   wl-clipboard
   grim
   slurp
-  gh
-];
+  playerctl
+  brightnessctl
+  networkmanagerapplet
+  matugen
+  yazi
+  ]
+  ;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
