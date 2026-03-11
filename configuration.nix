@@ -17,6 +17,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
 environment.variables = {
   HYPRCURSOR_THEME = "";
   HYPRCURSOR_SIZE = "24";
