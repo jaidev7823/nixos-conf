@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [ ./hardware-configuration.nix ];
@@ -7,19 +7,28 @@
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
     max-jobs = 1;
-    cores = 4;
+    cores = 2; # Dropped to 2 for extra safety
     builders-use-substitutes = true;
     auto-optimise-store = true;
+
+    # Add the cache here too
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
   };
+
+  # Prevent freezing if RAM fills up
+  zramSwap.enable = true;
+
+  # Keep your existing systemd.services.nix-daemon.serviceConfig block here...
 
   # Modern way to prevent Nix from hanging the UI
   systemd.services.nix-daemon.serviceConfig = {
-    AllowedCPUs = "0-3";    # Locks Nix to the first 4 cores
-    CPUSchedulingPolicy = "idle"; # Only uses CPU when nothing else wants it
-    Nice = 19;              # Lowest possible CPU priority
-    IOSchedulingClass = "idle";   # Lowest possible Disk priority
-  };
-
+    AllowedCPUs = "0-3";
+    # Use mkForce to override the default "other" policy
+    CPUSchedulingPolicy = lib.mkForce "idle"; 
+    Nice = 19;
+    IOSchedulingClass = lib.mkForce "idle";
+   };
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -73,7 +82,7 @@
     pulse.enable = true;
     wireplumber.enable = true;
   };
-  hardware.pulseaudio.enable = false;
+  # hardware.pulseaudio.enable = false;
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
