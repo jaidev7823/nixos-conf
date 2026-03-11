@@ -142,6 +142,10 @@
     
     # System / Themes
     rose-pine-cursor hyprcursor glib coreutils
+  
+    # database
+    sqlitebrowser sqlite
+
   ];
 
   # --- 6. EXTRA PROGRAMS & SERVICES ---
