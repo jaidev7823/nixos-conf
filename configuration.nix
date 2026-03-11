@@ -18,6 +18,15 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+environment.variables = {
+  HYPRCURSOR_THEME = "";
+  HYPRCURSOR_SIZE = "24";
+  # Keep these for XWayland apps (like some browsers/IDEs)
+  XCURSOR_THEME = "BreezeX-RosePine-Linux";
+  XCURSOR_SIZE = "24";
+};
+
+environment.pathsToLink = [ "/share/icons" ];
 # Networking
   networking = {
     hostName = "nixos";
@@ -123,9 +132,10 @@ programs.zsh = {
     btop
     fastfetch
     wlogout
-
+    tmux
     cava
-
+    rose-pine-cursor
+    hyprcursor
     kitty
     chromium
 
