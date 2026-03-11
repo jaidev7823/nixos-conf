@@ -144,6 +144,14 @@ programs.zsh = {
     rose-pine-cursor
     hyprcursor
     kitty
+  grim
+  slurp
+ satty
+ wl-clipboard
+    opencode
+    gemini-cli
+    codex
+
     chromium
     python3
   nodejs
@@ -183,7 +191,6 @@ programs.zsh = {
     hyprlock
     wl-clipboard
     grim
-    slurp
     playerctl
     brightnessctl
     networkmanagerapplet
