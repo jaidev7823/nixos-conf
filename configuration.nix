@@ -12,9 +12,13 @@
     auto-optimise-store = true;
   };
 
-  # Prevents Nix builds from hanging the UI/Hyprland
-  nix.daemonCPUPriority = 10;
-  systemd.services.nix-daemon.serviceConfig.AllowedCPUs = "0-3";
+  # Modern way to prevent Nix from hanging the UI
+  systemd.services.nix-daemon.serviceConfig = {
+    AllowedCPUs = "0-3";    # Locks Nix to the first 4 cores
+    CPUSchedulingPolicy = "idle"; # Only uses CPU when nothing else wants it
+    Nice = 19;              # Lowest possible CPU priority
+    IOSchedulingClass = "idle";   # Lowest possible Disk priority
+  };
 
   boot.loader = {
     systemd-boot.enable = true;
