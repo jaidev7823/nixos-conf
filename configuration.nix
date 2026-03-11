@@ -1,97 +1,54 @@
 { config, pkgs, ... }:
+
 {
-  imports = [
-    ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
-  # Desktop
-  programs.hyprland.enable = true;
+  # --- 1. SYSTEM CORE & NIX SETTINGS ---
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    max-jobs = 1;
+    cores = 4;
+    builders-use-substitutes = true;
+    auto-optimise-store = true;
+  };
 
-  services.xserver.enable = true;
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # Prevents Nix builds from hanging the UI/Hyprland
+  nix.daemonCPUPriority = 10;
+  systemd.services.nix-daemon.serviceConfig.AllowedCPUs = "0-3";
 
-  services.displayManager.sddm.enable = true;
-  services.displayManager.defaultSession = "hyprland";
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
+  };
 
-  # Boot
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-nix.settings = {
-  auto-optimise-store = true;
-  # Use these instead to keep the system responsive
-  cores = 4;             # Limit to 4 cores (adjust based on your CPU)
-  max-jobs = 2;          # Limit simultaneous builds
-};
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-
-environment.variables = {
-  HYPRCURSOR_THEME = "";
-  HYPRCURSOR_SIZE = "24";
-  # Keep these for XWayland apps (like some browsers/IDEs)
-  XCURSOR_THEME = "BreezeX-RosePine-Linux";
-  XCURSOR_SIZE = "24";
-};
-
-environment.pathsToLink = [ "/share/icons" ];
-# Networking
   networking = {
     hostName = "nixos";
-    networkmanager = {
-      enable = true;
-      wifi.backend = "iwd";
-    };
-    wireless.iwd.enable = true; # Correct path for the iwd service
+    networkmanager.enable = true;
+    networkmanager.wifi.backend = "iwd";
+    wireless.iwd.enable = true;
   };
 
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
-
-  # Time / Locale
   time.timeZone = "Asia/Kolkata";
-
-  i18n = {
-    defaultLocale = "en_IN";
-    extraLocaleSettings = {
-      LC_ADDRESS = "en_IN";
-      LC_IDENTIFICATION = "en_IN";
-      LC_MEASUREMENT = "en_IN";
-      LC_MONETARY = "en_IN";
-      LC_NAME = "en_IN";
-      LC_NUMERIC = "en_IN";
-      LC_PAPER = "en_IN";
-      LC_TELEPHONE = "en_IN";
-      LC_TIME = "en_IN";
-    };
+  i18n.defaultLocale = "en_IN";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_IN"; LC_IDENTIFICATION = "en_IN"; LC_MEASUREMENT = "en_IN";
+    LC_MONETARY = "en_IN"; LC_NAME = "en_IN"; LC_NUMERIC = "en_IN";
+    LC_PAPER = "en_IN"; LC_TELEPHONE = "en_IN"; LC_TIME = "en_IN";
   };
 
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-services.pipewire = {
-  enable = true;
-  alsa.enable = true;
-  alsa.support32Bit = true;
-  pulse.enable = true;
-  wireplumber.enable = true;
-};
-hardware.pulseaudio.enable = false;
-  # User
-  users.users.jaidev = {
-    isNormalUser = true;
-    description = "jai mishra";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [ ];
-    shell = pkgs.zsh;
+  # --- 2. DESKTOP & GRAPHICS (NVIDIA) ---
+  programs.hyprland.enable = true;
+  services.displayManager = {
+    sddm.enable = true;
+    defaultSession = "hyprland";
   };
 
-  nixpkgs.config.allowUnfree = true;
+  services.xserver = {
+    enable = true;
+    videoDrivers = [ "nvidia" ];
+    xkb.layout = "us";
+  };
 
-  # Nvidia
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
@@ -99,129 +56,87 @@ hardware.pulseaudio.enable = false;
 
   hardware.nvidia = {
     modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
     open = true;
-    nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
+    nvidiaSettings = true;
   };
 
-  # nix-ld
-  programs.nix-ld = {
+  # --- 3. AUDIO & BLUETOOTH ---
+  services.pipewire = {
     enable = true;
-    libraries = with pkgs; [
-      stdenv.cc.cc
-      zlib
-      fuse3
-      icu
-      nss
-      openssl
-      curl
-      expat
-      libxml2
-    ];
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
+  hardware.pulseaudio.enable = false;
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
+  # --- 4. USERS & SHELL ---
+  users.users.jaidev = {
+    isNormalUser = true;
+    description = "jai mishra";
+    extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.zsh;
   };
 
-programs.zsh = {
-  enable = true;
-  autosuggestions.enable = true;
-  syntaxHighlighting.enable = true;
-  
-  ohMyZsh = {
+  programs.zsh = {
     enable = true;
-    plugins = [ "git" ];
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+    ohMyZsh = {
+      enable = true;
+      plugins = [ "git" ];
+    };
+    promptInit = ''
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+      [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+    '';
   };
 
-  # This loads the theme and the config file
-  promptInit = ''
-    source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-  '';
-};
+  # --- 5. ENVIRONMENT & PACKAGES ---
+  nixpkgs.config.allowUnfree = true;
 
-  # Packages
+  environment.variables = {
+    HYPRCURSOR_THEME = "";
+    HYPRCURSOR_SIZE = "24";
+    XCURSOR_THEME = "BreezeX-RosePine-Linux";
+    XCURSOR_SIZE = "24";
+  };
+
   environment.systemPackages = with pkgs; [
+    # Development & Terminal
+    neovim tmux kitty git gh lazygit yazi btop fastfetch
+    ripgrep fd fzf jq tree-sitter gcc gnumake unzip
+    python3 nodejs rustc cargo python3Packages.pip
     
-    pulsemixer
-    pamixer
-    bluetui
-    impala
-    lazydocker
-    btop
-    fastfetch
-    wlogout
-    tmux
-    cava
-    rose-pine-cursor
-    hyprcursor
-    kitty
-    ripgrep
-    fd
-  grim
-  slurp
- satty
- wl-clipboard
-    opencode
-    gemini-cli
-    codex
-
-    chromium
-    python3
-  nodejs
-  rustc
-  cargo
-  python3Packages.pip
-    neovim
-    git
-    gh
-    lazygit
-    tree-sitter
-    ripgrep
-    fd
-    fzf
-    gcc
-    unzip
-    gnumake
-
-    yazi
-    glib
-    peacock
-    lua-language-server
-    stylua
-    nixd
-    alejandra
+    # LSP & Formatting
+    lua-language-server stylua nixd alejandra
     nodePackages.typescript-language-server
     nodePackages.vscode-langservers-extracted
 
-    ghostscript
-    tectonic
-    mermaid-cli
-    imagemagick
-
-    waybar
-    rofi
-    hyprpaper
-    hyprlock
-    wl-clipboard
-    grim
-    playerctl
-    brightnessctl
-    networkmanagerapplet
-    matugen
-
-    swww
-    swaynotificationcenter
-    libnotify
-
-    blueman
-    hyprpicker
-    swappy
-
-    bash
-    coreutils
-    findutils
-    jq
+    # Wayland / Hyprland Tools
+    waybar rofi hyprpaper hyprlock swww swaynotificationcenter
+    libnotify wl-clipboard grim slurp satty swappy hyprpicker
+    playerctl brightnessctl networkmanagerapplet matugen wlogout
+    
+    # Media & CLI Tools
+    pulsemixer pamixer bluetui impala lazydocker cava
+    chromium opencode gemini-cli codex peacock
+    imagemagick ghostscript tectonic mermaid-cli
+    
+    # System / Themes
+    rose-pine-cursor hyprcursor glib coreutils
   ];
+
+  # --- 6. EXTRA PROGRAMS & SERVICES ---
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc zlib fuse3 icu nss openssl curl expat libxml2
+    ];
+  };
 
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
