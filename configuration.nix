@@ -17,6 +17,15 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+nix.settings = {
+  auto-optimise-store = true;
+  # This ensures the build process doesn't starve your system
+  cores = 4; 
+  max-jobs = "auto";
+  # Lower priority for builds
+  daemon-priority = "low"; 
+};
+
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
@@ -149,6 +158,8 @@ programs.zsh = {
     rose-pine-cursor
     hyprcursor
     kitty
+    ripgrep
+    fd
   grim
   slurp
  satty
