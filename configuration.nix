@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   imports = [
     ./hardware-configuration.nix
@@ -62,7 +61,14 @@ environment.pathsToLink = [ "/share/icons" ];
     layout = "us";
     variant = "";
   };
-
+services.pipewire = {
+  enable = true;
+  alsa.enable = true;
+  alsa.support32Bit = true;
+  pulse.enable = true;
+  wireplumber.enable = true;
+};
+hardware.pulseaudio.enable = false;
   # User
   users.users.jaidev = {
     isNormalUser = true;
@@ -126,6 +132,7 @@ programs.zsh = {
   environment.systemPackages = with pkgs; [
     
     pulsemixer
+    pamixer
     bluetui
     impala
     lazydocker
@@ -157,7 +164,7 @@ programs.zsh = {
 
     yazi
     glib
-
+    peacock
     lua-language-server
     stylua
     nixd
