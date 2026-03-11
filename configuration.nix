@@ -19,13 +19,10 @@
 
 nix.settings = {
   auto-optimise-store = true;
-  # This ensures the build process doesn't starve your system
-  cores = 4; 
-  max-jobs = "auto";
-  # Lower priority for builds
-  daemon-priority = "low"; 
+  # Use these instead to keep the system responsive
+  cores = 4;             # Limit to 4 cores (adjust based on your CPU)
+  max-jobs = 2;          # Limit simultaneous builds
 };
-
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
