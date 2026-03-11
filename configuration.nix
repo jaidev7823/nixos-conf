@@ -138,7 +138,11 @@ programs.zsh = {
     hyprcursor
     kitty
     chromium
-
+    python3
+  nodejs
+  rustc
+  cargo
+  python3Packages.pip
     neovim
     git
     gh
