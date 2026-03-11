@@ -122,7 +122,8 @@ programs.zsh = {
     lazydocker
     btop
     fastfetch
-        
+    wlogout
+
     cava
 
     kitty
@@ -182,7 +183,6 @@ programs.zsh = {
   ];
 
   fonts.packages = with pkgs; [
-    nerdfonts
     nerd-fonts.jetbrains-mono
     font-awesome
   ];
