@@ -96,27 +96,26 @@
     ];
   };
 
-  # Environment
-  environment.sessionVariables = {
-    EDITOR = "nvim";
-  };
-
-  # Zsh
-  programs.zsh = {
+programs.zsh = {
+  enable = true;
+  autosuggestions.enable = true;
+  syntaxHighlighting.enable = true;
+  
+  ohMyZsh = {
     enable = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    ohMyZsh = {
-      enable = true;
-      plugins = [ "git" "sudo" "history-substring-search" ];
-    };
+    plugins = [ "git" ];
   };
 
-
+  # This loads the theme and the config file
+  promptInit = ''
+    source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+  '';
+};
 
   # Packages
   environment.systemPackages = with pkgs; [
+    
     pulsemixer
     bluetui
     impala
@@ -183,6 +182,7 @@
   ];
 
   fonts.packages = with pkgs; [
+    nerdfonts
     nerd-fonts.jetbrains-mono
     font-awesome
   ];
