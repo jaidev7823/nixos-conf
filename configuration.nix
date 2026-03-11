@@ -133,7 +133,8 @@
     waybar rofi hyprpaper hyprlock swww swaynotificationcenter
     libnotify wl-clipboard grim slurp satty swappy hyprpicker
     playerctl brightnessctl networkmanagerapplet matugen wlogout
-    
+    cliphist wl-clipboard 
+
     # Media & CLI Tools
     pulsemixer pamixer bluetui impala lazydocker cava
     chromium opencode gemini-cli codex peacock
