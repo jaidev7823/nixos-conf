@@ -18,17 +18,15 @@
 
   # Prevent freezing if RAM fills up
   zramSwap.enable = true;
-
-  # Keep your existing systemd.services.nix-daemon.serviceConfig block here...
-
-  # Modern way to prevent Nix from hanging the UI
+ 
   systemd.services.nix-daemon.serviceConfig = {
     AllowedCPUs = "0-3";
     # Use mkForce to override the default "other" policy
     CPUSchedulingPolicy = lib.mkForce "idle"; 
     Nice = 19;
     IOSchedulingClass = lib.mkForce "idle";
-   };
+  };
+
   boot.loader = {
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
@@ -90,7 +88,7 @@
   users.users.jaidev = {
     isNormalUser = true;
     description = "jai mishra";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     shell = pkgs.zsh;
   };
 
@@ -117,7 +115,7 @@
     XCURSOR_THEME = "BreezeX-RosePine-Linux";
     XCURSOR_SIZE = "24";
   };
-
+virtualisation.docker.enable = true;
   environment.systemPackages = with pkgs; [
     # Development & Terminal
     neovim tmux kitty git gh lazygit yazi btop fastfetch
@@ -133,7 +131,7 @@
     waybar rofi hyprpaper hyprlock swww swaynotificationcenter
     libnotify wl-clipboard grim slurp satty swappy hyprpicker
     playerctl brightnessctl networkmanagerapplet matugen wlogout
-    cliphist wl-clipboard 
+    cliphist wl-clipboard peaclock 
 
     # Media & CLI Tools
     pulsemixer pamixer bluetui impala lazydocker cava
@@ -146,6 +144,8 @@
     # database
     sqlitebrowser sqlite
 
+    # https
+    postman
   ];
 
   # --- 6. EXTRA PROGRAMS & SERVICES ---
