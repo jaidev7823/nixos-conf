@@ -31,6 +31,7 @@
             ai-tools.packages.${system}.opencode
             ai-tools.packages.${system}.codex
             ai-tools.packages.${system}.agent-browser
+            ai-tools.packages.${system}.pi
           ];
         })
       ];

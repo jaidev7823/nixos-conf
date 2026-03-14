@@ -25,17 +25,17 @@
     Nice = 19;
     IOSchedulingClass = lib.mkForce "idle";
   };
-boot.loader = {
-  systemd-boot.enable = true;
-  efi.canTouchEfiVariables = true;
+  boot.loader = {
+    systemd-boot.enable = true;
+    efi.canTouchEfiVariables = true;
 
-  systemd-boot.extraEntries = {
-    "windows.conf" = ''
-      title Windows
-      efi /EFI/Microsoft/Boot/bootmgfw.efi
-    '';
+    systemd-boot.extraEntries = {
+      "windows.conf" = ''
+        title Windows
+        efi /EFI/Microsoft/Boot/bootmgfw.efi
+        '';
+    };
   };
-};
   networking = {
     hostName = "nixos";
     networkmanager.enable = true;
@@ -120,12 +120,47 @@ boot.loader = {
     XCURSOR_SIZE = "24";
   };
   virtualisation.docker.enable = true;
+
+  xdg.mime.enable = true;
+
+  xdg.mime.defaultApplications = {
+
+# directories
+    "inode/directory" = "org.gnome.Nautilus.desktop";
+
+# text
+    "text/plain" = "nvim.desktop";
+    "text/markdown" = "nvim.desktop";
+    "application/json" = "nvim.desktop";
+
+# pdf
+    "application/pdf" = "org.gnome.Evince.desktop";
+
+# images
+    "image/png" = "imv.desktop";
+    "image/jpeg" = "imv.desktop";
+    "image/webp" = "imv.desktop";
+    "image/gif" = "imv.desktop";
+
+# video
+    "video/mp4" = "mpv.desktop";
+    "video/x-matroska" = "mpv.desktop";
+
+# audio
+    "audio/mpeg" = "mpv.desktop";
+    "audio/flac" = "mpv.desktop";
+
+# archives
+    "application/zip" = "org.gnome.Nautilus.desktop";
+    "application/x-tar" = "org.gnome.Nautilus.desktop";
+  };
+
   environment.systemPackages = with pkgs; [
 # Development & Terminal
     neovim tmux kitty git gh lazygit yazi btop fastfetch
       ripgrep fd fzf jq tree-sitter gcc gnumake unzip
       python3 nodejs rustc cargo python3Packages.pip
-      lsof 
+      lsof nautilus evince imv mpv 
 # LSP & Formatting
       lua-language-server stylua nixd alejandra
       nodePackages.typescript-language-server
