@@ -12,14 +12,15 @@
     extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
   };
 
-  services.openssh.enable = true;
+  networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [ 22 ];
   services.openssh.settings = {
     PermitRootLogin = "no";
     PasswordAuthentication = true;
   };
 
   zramSwap.enable = true;
-  
+
   systemd.services.nix-daemon.serviceConfig = {
     AllowedCPUs = "0-3";
     CPUSchedulingPolicy = lib.mkForce "idle"; 
