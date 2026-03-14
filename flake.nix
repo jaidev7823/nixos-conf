@@ -30,6 +30,7 @@
             ai-tools.packages.${system}.gemini-cli
             ai-tools.packages.${system}.opencode
             ai-tools.packages.${system}.codex
+            ai-tools.packages.${system}.agent-browser
           ];
         })
       ];
