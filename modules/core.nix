@@ -11,13 +11,17 @@
     extra-substituters = [ "https://cache.numtide.com" ];
     extra-trusted-public-keys = [ "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=" ];
   };
-
-  networking.firewall.enable = true;
-  networking.firewall.allowedTCPPorts = [ 22 ];
-  services.openssh.settings = {
-    PermitRootLogin = "no";
-    PasswordAuthentication = true;
+  # Enable the OpenSSH daemon
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = true;
+      PermitRootLogin = "yes"; # Change to "prohibit-password" for better security later
+    };
   };
+
+  # Open the port in the firewall
+  networking.firewall.allowedTCPPorts = [ 22 ];
 
   zramSwap.enable = true;
 
