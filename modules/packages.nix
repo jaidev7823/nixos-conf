@@ -12,7 +12,9 @@
     ripgrep fd fzf jq tree-sitter gcc gnumake unzip
     python3 nodejs rustc cargo python3Packages.pip
     lsof nautilus evince imv mpv walker elephant 
+    vscode
 
+    
     # LSP & Formatting
     lua-language-server stylua nixd alejandra
     nodePackages.typescript-language-server
@@ -26,7 +28,7 @@
 
     # Media & CLI Tools
     pulsemixer pamixer bluetui impala lazydocker cava
-    chromium opencode gemini-cli codex peacock
+    chromium firefox opencode gemini-cli codex peacock
     imagemagick ghostscript tectonic mermaid-cli
 
     # System / Themes

@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
     ai-tools.url = "github:numtide/llm-agents.nix";
   };
 
@@ -23,6 +27,7 @@
       modules = [
         ./configuration.nix
 
+        # You can keep Home Manager imported (just not managing zsh)
         home-manager.nixosModules.home-manager
 
         ({ pkgs, ... }: {
@@ -32,6 +37,9 @@
             ai-tools.packages.${system}.codex
             ai-tools.packages.${system}.agent-browser
             ai-tools.packages.${system}.pi
+
+            # zoxide (only install, no HM config)
+            pkgs.zoxide
           ];
         })
       ];
