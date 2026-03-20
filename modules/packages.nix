@@ -28,7 +28,7 @@
 
     # Media & CLI Tools
     pulsemixer pamixer bluetui impala lazydocker cava
-    chromium firefox opencode gemini-cli codex peacock
+    google-chrome firefox opencode gemini-cli codex peacock
     imagemagick ghostscript tectonic mermaid-cli
 
     # System / Themes
