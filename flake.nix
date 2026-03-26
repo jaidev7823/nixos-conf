@@ -8,7 +8,8 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     ai-tools.url = "github:numtide/llm-agents.nix";
-  };
+    whisp-away.url = "github:madjinn/whisp-away";
+};
 
   nixConfig = {
     extra-substituters = [ "https://cache.numtide.com" ];
@@ -37,7 +38,7 @@
             ai-tools.packages.${system}.codex
             ai-tools.packages.${system}.agent-browser
             ai-tools.packages.${system}.pi
-
+            whisp-away.packages.${system}.default
             # zoxide (only install, no HM config)
             pkgs.zoxide
           ];
