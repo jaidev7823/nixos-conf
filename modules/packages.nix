@@ -12,7 +12,7 @@
     ripgrep fd fzf jq tree-sitter gcc gnumake unzip
     python3 nodejs rustc cargo python3Packages.pip
     lsof nautilus evince imv mpv walker elephant 
-    vscode
+    vscode 
 
     
     # LSP & Formatting
@@ -24,11 +24,11 @@
     waybar rofi hyprpaper hyprlock swww swaynotificationcenter
     libnotify wl-clipboard grim slurp satty swappy hyprpicker
     playerctl brightnessctl networkmanagerapplet matugen wlogout
-    cliphist wl-clipboard peaclock 
+    cliphist wl-clipboard peaclock gammastep 
 
     # Media & CLI Tools
     pulsemixer pamixer bluetui impala lazydocker cava
-    google-chrome brave firefox opencode gemini-cli codex peacock
+    google-chrome brave tor opencode gemini-cli codex peacock
     imagemagick ghostscript tectonic mermaid-cli
 
     # System / Themes
