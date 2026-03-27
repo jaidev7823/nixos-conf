@@ -34,7 +34,7 @@
     # System / Themes
     rose-pine-cursor hyprcursor glib coreutils
     sqlitebrowser sqlite
-    postman
+    postman pkgs.kalker
 
     #server 
     termius
