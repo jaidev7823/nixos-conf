@@ -42,7 +42,7 @@
           services.postgresql = {
             enable = true;
             package = pkgs.postgresql_16; # Optional: specify version
-            ensureDatabases = [ "mydatabase" ];
+            ensureDatabases = [ "mydatabase" "myuser" ];
             ensureUsers = [{
               name = "myuser";
               ensureDBOwnership = true;
