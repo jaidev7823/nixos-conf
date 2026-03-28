@@ -12,7 +12,12 @@
     ripgrep fd fzf jq tree-sitter gcc gnumake unzip
     python3 nodejs rustc cargo python3Packages.pip
     lsof nautilus evince imv mpv walker elephant 
-    vscode 
+    vscode pkgs.helix
+    # nodePackages
+    nodePackages.prettier
+    stylua
+    black
+    isort
 
     
     # LSP & Formatting
