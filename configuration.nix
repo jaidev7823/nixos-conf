@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ./modules/core.nix
     ./modules/desktop.nix
+    ./modules/dev-tools.nix
     ./modules/packages.nix
     ./modules/users.nix
   ];
