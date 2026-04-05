@@ -13,7 +13,6 @@
     python3 nodejs rustc cargo python3Packages.pip
     lsof nautilus evince imv mpv walker elephant 
     vscode pkgs.helix
-    texlive.combined.scheme-full
     # nodePackages
     nodePackages.prettier
     stylua
