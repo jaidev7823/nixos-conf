@@ -20,8 +20,6 @@
     };
   };
 
-  # Open the port in the firewall
-  networking.firewall.allowedTCPPorts = [ 22 ];
 
   zramSwap.enable = true;
 
@@ -48,6 +46,14 @@
     networkmanager.enable = true;
     networkmanager.wifi.backend = "iwd";
     wireless.iwd.enable = true;
+    
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [ 22 5432 ];
+      trustedInterfaces = [ "docker0" ];
+      # This helps if Docker containers have trouble routing back to the host
+      checkReversePath = false; 
+    };
   };
 
   time.timeZone = "Asia/Kolkata";
